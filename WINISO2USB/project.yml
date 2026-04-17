@@ -1,0 +1,35 @@
+name: WINISO2USB
+options:
+  bundleIdPrefix: com.winiso2usb
+  deploymentTarget:
+    macOS: "14.0"
+  xcodeVersion: "16.0"
+  createIntermediateGroups: true
+settings:
+  base:
+    SWIFT_VERSION: "6.0"
+    SWIFT_STRICT_CONCURRENCY: complete
+targets:
+  WINISO2USB:
+    type: application
+    platform: macOS
+    sources: [WINISO2USB]
+    postCompileScripts:
+      - script: |
+          mkdir -p "${BUILT_PRODUCTS_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/bin"
+          cp "${SRCROOT}/WINISO2USB/Resources/bin/wimlib-imagex" "${BUILT_PRODUCTS_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/bin/"
+          cp "${SRCROOT}/WINISO2USB/Resources/bin/libwim.15.dylib" "${BUILT_PRODUCTS_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/bin/"
+          chmod +x "${BUILT_PRODUCTS_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/bin/wimlib-imagex"
+        name: Bundle wimlib
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: com.winiso2usb.app
+        INFOPLIST_FILE: WINISO2USB/Info.plist
+        CODE_SIGN_ENTITLEMENTS: WINISO2USB/WINISO2USB.entitlements
+        MARKETING_VERSION: "1.0.0"
+        CURRENT_PROJECT_VERSION: "1"
+        ENABLE_APP_SANDBOX: "NO"
+        ENABLE_HARDENED_RUNTIME: "YES"
+        PRODUCT_NAME: WINISO2USB
+        COMBINE_HIDPI_IMAGES: "YES"
+        ASSETCATALOG_COMPILER_APPICON_NAME: AppIcon

@@ -1,0 +1,436 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 63;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		05D5DDC75D21E8CBD25CAA3C /* ISOMetadata.swift in Sources */ = {isa = PBXBuildFile; fileRef = C124A8E7DC04363561D147D3 /* ISOMetadata.swift */; };
+		1D479DCBD3AF24E79DE50581 /* USBDrive.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F7B87EB68BD192C8C1BAFA6 /* USBDrive.swift */; };
+		1D8EC8011AA7E5106CCA8E5D /* WizardState.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5DC1FCCD2624B350F9F641DD /* WizardState.swift */; };
+		29E0291EE28487F1F94A6B6E /* DiskService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 79AA3E08A882FD049A290A52 /* DiskService.swift */; };
+		54460AE595A2CD604A7469B7 /* CompletionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1D76D899B0540354246330E0 /* CompletionView.swift */; };
+		6DC1F0F2A5FD4667F1502082 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 1EC9DAE12D9098B1FA155289 /* Assets.xcassets */; };
+		773724BFD1E7E5687B67DE5A /* ISODropView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 964B6835C67F62EC0B322CCE /* ISODropView.swift */; };
+		7D119194CADF1D0A0F665E4D /* ISOService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 23F5FB9EBD257EBF1DFF50DA /* ISOService.swift */; };
+		982D63B71FF3ED36141FA3C9 /* ProcessRunner.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8217E24B8D35907877B9C599 /* ProcessRunner.swift */; };
+		9D72B742B8F926C7658B3C04 /* USBCreationService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0C5942339797C5F3BCB56B61 /* USBCreationService.swift */; };
+		9EA8E78EDD32CFCAC34A397B /* CreationProgressView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DD229518F2852E2714F69966 /* CreationProgressView.swift */; };
+		B353318955CAB70D2BC4775C /* ReviewView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CBBB78E13F5ABC07E0BF7F71 /* ReviewView.swift */; };
+		C1B8D7C4EB8F4965FDB37C94 /* libwim.15.dylib in Resources */ = {isa = PBXBuildFile; fileRef = D030A71E716EC79848DC628A /* libwim.15.dylib */; };
+		D55301C490EB88BE73A4CB3E /* WizardContainerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C3B9740CB8CAD9AFC07C6E26 /* WizardContainerView.swift */; };
+		E42435E1FD7225563D6CC315 /* WINISO2USBApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8601B8974B0ED63EB51727AD /* WINISO2USBApp.swift */; };
+		F0532E608432D9827EE5844D /* USBDriveSelectView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 31A23EF3920C1D9233654334 /* USBDriveSelectView.swift */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXFileReference section */
+		0C5942339797C5F3BCB56B61 /* USBCreationService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = USBCreationService.swift; sourceTree = "<group>"; };
+		1D76D899B0540354246330E0 /* CompletionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CompletionView.swift; sourceTree = "<group>"; };
+		1EC9DAE12D9098B1FA155289 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		23F5FB9EBD257EBF1DFF50DA /* ISOService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ISOService.swift; sourceTree = "<group>"; };
+		31A23EF3920C1D9233654334 /* USBDriveSelectView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = USBDriveSelectView.swift; sourceTree = "<group>"; };
+		3370FEE4DEFBA963157A287D /* WINISO2USB.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = WINISO2USB.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		3B1A00705BAC4BD3E75C8903 /* wimlib-imagex */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.executable"; path = "wimlib-imagex"; sourceTree = "<group>"; };
+		41B38B71EE8ACCE94E884DCA /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
+		5DC1FCCD2624B350F9F641DD /* WizardState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WizardState.swift; sourceTree = "<group>"; };
+		6F7B87EB68BD192C8C1BAFA6 /* USBDrive.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = USBDrive.swift; sourceTree = "<group>"; };
+		79AA3E08A882FD049A290A52 /* DiskService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DiskService.swift; sourceTree = "<group>"; };
+		8217E24B8D35907877B9C599 /* ProcessRunner.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProcessRunner.swift; sourceTree = "<group>"; };
+		8601B8974B0ED63EB51727AD /* WINISO2USBApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WINISO2USBApp.swift; sourceTree = "<group>"; };
+		964B6835C67F62EC0B322CCE /* ISODropView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ISODropView.swift; sourceTree = "<group>"; };
+		C124A8E7DC04363561D147D3 /* ISOMetadata.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ISOMetadata.swift; sourceTree = "<group>"; };
+		C3B9740CB8CAD9AFC07C6E26 /* WizardContainerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WizardContainerView.swift; sourceTree = "<group>"; };
+		CBBB78E13F5ABC07E0BF7F71 /* ReviewView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReviewView.swift; sourceTree = "<group>"; };
+		D030A71E716EC79848DC628A /* libwim.15.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; path = libwim.15.dylib; sourceTree = "<group>"; };
+		DD229518F2852E2714F69966 /* CreationProgressView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CreationProgressView.swift; sourceTree = "<group>"; };
+		F7348000EF5B24A5B0665046 /* WINISO2USB.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = WINISO2USB.entitlements; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXGroup section */
+		02D6556B446AF2BBCC097B8F /* Models */ = {
+			isa = PBXGroup;
+			children = (
+				C124A8E7DC04363561D147D3 /* ISOMetadata.swift */,
+				6F7B87EB68BD192C8C1BAFA6 /* USBDrive.swift */,
+				5DC1FCCD2624B350F9F641DD /* WizardState.swift */,
+			);
+			path = Models;
+			sourceTree = "<group>";
+		};
+		2710172CBE0CB733759F988E /* WINISO2USB */ = {
+			isa = PBXGroup;
+			children = (
+				1EC9DAE12D9098B1FA155289 /* Assets.xcassets */,
+				41B38B71EE8ACCE94E884DCA /* Info.plist */,
+				F7348000EF5B24A5B0665046 /* WINISO2USB.entitlements */,
+				8601B8974B0ED63EB51727AD /* WINISO2USBApp.swift */,
+				02D6556B446AF2BBCC097B8F /* Models */,
+				3ED7EE86F8BB487938CF49B8 /* Resources */,
+				7E9F1451C494B4A333B49228 /* Services */,
+				7B272E2E26F63330D69B8317 /* Views */,
+			);
+			path = WINISO2USB;
+			sourceTree = "<group>";
+		};
+		3ED7EE86F8BB487938CF49B8 /* Resources */ = {
+			isa = PBXGroup;
+			children = (
+				AC460D330D2A94E5F79C6379 /* bin */,
+			);
+			path = Resources;
+			sourceTree = "<group>";
+		};
+		7B272E2E26F63330D69B8317 /* Views */ = {
+			isa = PBXGroup;
+			children = (
+				1D76D899B0540354246330E0 /* CompletionView.swift */,
+				DD229518F2852E2714F69966 /* CreationProgressView.swift */,
+				964B6835C67F62EC0B322CCE /* ISODropView.swift */,
+				CBBB78E13F5ABC07E0BF7F71 /* ReviewView.swift */,
+				31A23EF3920C1D9233654334 /* USBDriveSelectView.swift */,
+				C3B9740CB8CAD9AFC07C6E26 /* WizardContainerView.swift */,
+			);
+			path = Views;
+			sourceTree = "<group>";
+		};
+		7E9F1451C494B4A333B49228 /* Services */ = {
+			isa = PBXGroup;
+			children = (
+				79AA3E08A882FD049A290A52 /* DiskService.swift */,
+				23F5FB9EBD257EBF1DFF50DA /* ISOService.swift */,
+				8217E24B8D35907877B9C599 /* ProcessRunner.swift */,
+				0C5942339797C5F3BCB56B61 /* USBCreationService.swift */,
+			);
+			path = Services;
+			sourceTree = "<group>";
+		};
+		93E648440262D868A69E4004 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				3370FEE4DEFBA963157A287D /* WINISO2USB.app */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		AC460D330D2A94E5F79C6379 /* bin */ = {
+			isa = PBXGroup;
+			children = (
+				D030A71E716EC79848DC628A /* libwim.15.dylib */,
+				3B1A00705BAC4BD3E75C8903 /* wimlib-imagex */,
+			);
+			path = bin;
+			sourceTree = "<group>";
+		};
+		E781A4BD3DA6BD27E90001F4 = {
+			isa = PBXGroup;
+			children = (
+				2710172CBE0CB733759F988E /* WINISO2USB */,
+				93E648440262D868A69E4004 /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		17C6EA92E9055A02040ECF39 /* WINISO2USB */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 2E57186F1784BC26AA492D8F /* Build configuration list for PBXNativeTarget "WINISO2USB" */;
+			buildPhases = (
+				7228A6492BDEA2B5079DFD4B /* Sources */,
+				6BCF6089C745770C8A55F32E /* Bundle wimlib */,
+				FAAC9D45F0B3C4717F80D09F /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = WINISO2USB;
+			packageProductDependencies = (
+			);
+			productName = WINISO2USB;
+			productReference = 3370FEE4DEFBA963157A287D /* WINISO2USB.app */;
+			productType = "com.apple.product-type.application";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		9BAD1E270FB58881BC563418 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				BuildIndependentTargetsInParallel = YES;
+				LastUpgradeCheck = 1600;
+			};
+			buildConfigurationList = 731FFB4D0CA08509B7D93A51 /* Build configuration list for PBXProject "WINISO2USB" */;
+			compatibilityVersion = "Xcode 14.0";
+			developmentRegion = en;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				Base,
+				en,
+			);
+			mainGroup = E781A4BD3DA6BD27E90001F4;
+			minimizedProjectReferenceProxies = 1;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				17C6EA92E9055A02040ECF39 /* WINISO2USB */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		FAAC9D45F0B3C4717F80D09F /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				6DC1F0F2A5FD4667F1502082 /* Assets.xcassets in Resources */,
+				C1B8D7C4EB8F4965FDB37C94 /* libwim.15.dylib in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXShellScriptBuildPhase section */
+		6BCF6089C745770C8A55F32E /* Bundle wimlib */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+			);
+			name = "Bundle wimlib";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "mkdir -p \"${BUILT_PRODUCTS_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/bin\"\ncp \"${SRCROOT}/WINISO2USB/Resources/bin/wimlib-imagex\" \"${BUILT_PRODUCTS_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/bin/\"\ncp \"${SRCROOT}/WINISO2USB/Resources/bin/libwim.15.dylib\" \"${BUILT_PRODUCTS_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/bin/\"\nchmod +x \"${BUILT_PRODUCTS_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/bin/wimlib-imagex\"\n# Fix dylib load path: wimlib-imagex expects @executable_path/../Resources/bin/ which only works from Contents/MacOS/.\n# Since both binaries live in Resources/bin/, rewrite to @loader_path/ so the dylib is found in the same directory.\ninstall_name_tool -change \"@executable_path/../Resources/bin/libwim.15.dylib\" \"@loader_path/libwim.15.dylib\" \"${BUILT_PRODUCTS_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/bin/wimlib-imagex\"\ninstall_name_tool -id \"@loader_path/libwim.15.dylib\" \"${BUILT_PRODUCTS_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/bin/libwim.15.dylib\"\ncodesign --force --options runtime --sign - \"${BUILT_PRODUCTS_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/bin/libwim.15.dylib\"\ncodesign --force --options runtime --sign - \"${BUILT_PRODUCTS_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/bin/wimlib-imagex\"\n";
+		};
+/* End PBXShellScriptBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		7228A6492BDEA2B5079DFD4B /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				54460AE595A2CD604A7469B7 /* CompletionView.swift in Sources */,
+				9EA8E78EDD32CFCAC34A397B /* CreationProgressView.swift in Sources */,
+				29E0291EE28487F1F94A6B6E /* DiskService.swift in Sources */,
+				773724BFD1E7E5687B67DE5A /* ISODropView.swift in Sources */,
+				05D5DDC75D21E8CBD25CAA3C /* ISOMetadata.swift in Sources */,
+				7D119194CADF1D0A0F665E4D /* ISOService.swift in Sources */,
+				982D63B71FF3ED36141FA3C9 /* ProcessRunner.swift in Sources */,
+				B353318955CAB70D2BC4775C /* ReviewView.swift in Sources */,
+				9D72B742B8F926C7658B3C04 /* USBCreationService.swift in Sources */,
+				1D479DCBD3AF24E79DE50581 /* USBDrive.swift in Sources */,
+				F0532E608432D9827EE5844D /* USBDriveSelectView.swift in Sources */,
+				E42435E1FD7225563D6CC315 /* WINISO2USBApp.swift in Sources */,
+				D55301C490EB88BE73A4CB3E /* WizardContainerView.swift in Sources */,
+				1D8EC8011AA7E5106CCA8E5D /* WizardState.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin XCBuildConfiguration section */
+		4132927BAF8721313A902AB5 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"$(inherited)",
+					"DEBUG=1",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				MACOSX_DEPLOYMENT_TARGET = 14.0;
+				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+				MTL_FAST_MATH = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = macosx;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_STRICT_CONCURRENCY = complete;
+				SWIFT_VERSION = 6.0;
+			};
+			name = Debug;
+		};
+		8037577CE8AEE5C67CC6347E /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_ENTITLEMENTS = WINISO2USB/WINISO2USB.entitlements;
+				CODE_SIGN_IDENTITY = "Apple Development";
+				CODE_SIGN_STYLE = Automatic;
+				COMBINE_HIDPI_IMAGES = YES;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = 8352865GK4;
+				ENABLE_APP_SANDBOX = NO;
+				ENABLE_HARDENED_RUNTIME = YES;
+				INFOPLIST_FILE = WINISO2USB/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+				);
+				MARKETING_VERSION = 1.1;
+				PRODUCT_BUNDLE_IDENTIFIER = com.neiljohn.winiso2usb;
+				PRODUCT_NAME = WINISO2USB;
+				PROVISIONING_PROFILE_SPECIFIER = "";
+				SDKROOT = macosx;
+			};
+			name = Release;
+		};
+		A747968467BA4E7EF7ED209E /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				MACOSX_DEPLOYMENT_TARGET = 14.0;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				MTL_FAST_MATH = YES;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = macosx;
+				SWIFT_COMPILATION_MODE = wholemodule;
+				SWIFT_OPTIMIZATION_LEVEL = "-O";
+				SWIFT_STRICT_CONCURRENCY = complete;
+				SWIFT_VERSION = 6.0;
+			};
+			name = Release;
+		};
+		E5BD7B409188F33050A9897B /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_ENTITLEMENTS = WINISO2USB/WINISO2USB.entitlements;
+				CODE_SIGN_IDENTITY = "Apple Development";
+				CODE_SIGN_STYLE = Automatic;
+				COMBINE_HIDPI_IMAGES = YES;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = 8352865GK4;
+				ENABLE_APP_SANDBOX = NO;
+				ENABLE_HARDENED_RUNTIME = YES;
+				INFOPLIST_FILE = WINISO2USB/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+				);
+				MARKETING_VERSION = 1.1;
+				PRODUCT_BUNDLE_IDENTIFIER = com.neiljohn.winiso2usb;
+				PRODUCT_NAME = WINISO2USB;
+				PROVISIONING_PROFILE_SPECIFIER = "";
+				SDKROOT = macosx;
+			};
+			name = Debug;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		2E57186F1784BC26AA492D8F /* Build configuration list for PBXNativeTarget "WINISO2USB" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				E5BD7B409188F33050A9897B /* Debug */,
+				8037577CE8AEE5C67CC6347E /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
+		731FFB4D0CA08509B7D93A51 /* Build configuration list for PBXProject "WINISO2USB" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				4132927BAF8721313A902AB5 /* Debug */,
+				A747968467BA4E7EF7ED209E /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = 9BAD1E270FB58881BC563418 /* Project object */;
+}
