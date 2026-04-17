@@ -1,6 +1,15 @@
 import Foundation
 import os
 
+// Small MainActor-isolated reference wrapper used to share mutable counters
+// between the non-isolated stdout callback and the MainActor Task that
+// updates UI state. @MainActor classes are implicitly Sendable in Swift 6.
+@MainActor
+private final class IntBox {
+    var value: Int
+    init(_ value: Int) { self.value = value }
+}
+
 // Orchestrates the full USB creation pipeline: erase, mount ISO, copy, split, eject.
 @MainActor
 final class USBCreationService: ObservableObject {
@@ -194,7 +203,7 @@ final class USBCreationService: ObservableObject {
         }
 
         // Track file count for log throttling
-        var fileCount = 0
+        let fileCount = IntBox(0)
 
         let result = try await ProcessRunner.runWithOutput(
             "/usr/bin/rsync",
@@ -213,9 +222,9 @@ final class USBCreationService: ObservableObject {
                 }
                 // Show current file being copied
                 self.progress.currentFile = trimmed
-                fileCount += 1
+                fileCount.value += 1
                 // Log every 50th file to keep the log useful without flooding
-                if fileCount % 50 == 1 {
+                if fileCount.value % 50 == 1 {
                     self.addLog("  Copying: \(trimmed)")
                 }
             }
@@ -227,7 +236,7 @@ final class USBCreationService: ObservableObject {
             throw WINISO2USBError.copyFailed(result.stderr)
         }
 
-        addLog("  Copied \(fileCount) files")
+        addLog("  Copied \(fileCount.value) files")
         progress.overallProgress = targetProgress
         progress.currentFile = ""
     }
@@ -267,7 +276,7 @@ final class USBCreationService: ObservableObject {
             withIntermediateDirectories: true
         )
 
-        var lastLoggedPct = -1
+        let lastLoggedPct = IntBox(-1)
         let startTime = CFAbsoluteTimeGetCurrent()
 
         let result = try await ProcessRunner.runWithOutput(
@@ -275,8 +284,7 @@ final class USBCreationService: ObservableObject {
             arguments: ["split", wimPath, destination, String(splitSizeMB)]
         ) { [weak self] line in
             Task { @MainActor [weak self] in
-                guard let self = self else { return }
-                // Parse "Splitting WIM: 512 MiB of 6509 MiB (7%) written, part 1 of 2"
+                guard let self = self else { return }                // Parse "Splitting WIM: 512 MiB of 6509 MiB (7%) written, part 1 of 2"
                 if let info = self.parseWimlibDetail(line) {
                     let fraction = Double(info.pct) / 100.0
                     self.progress.overallProgress = 0.75 + (0.15 * fraction)
@@ -303,8 +311,8 @@ final class USBCreationService: ObservableObject {
 
                     // Log every 10%
                     let rounded = (info.pct / 10) * 10
-                    if rounded > lastLoggedPct && rounded > 0 {
-                        lastLoggedPct = rounded
+                    if rounded > lastLoggedPct.value && rounded > 0 {
+                        lastLoggedPct.value = rounded
                         self.addLog("  wimlib: \(info.pct)% complete")
                     }
                 }
