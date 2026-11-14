@@ -1,7 +1,7 @@
 import SwiftUI
 
 // Step 3: Review selections and confirm before starting the destructive operation.
-// ISO and USB summaries are placed side by side to keep everything visible.
+// The ISO flows into the drive, left to right; below them, the confirmation that guards the erase.
 struct ReviewView: View {
     @EnvironmentObject var wizardState: WizardState
     // Screenshot mode shows the screen as it is once the confirmation has been typed.
@@ -9,31 +9,32 @@ struct ReviewView: View {
     @State private var confirmed: Bool = ScreenshotMode.isActive
 
     var body: some View {
-        VStack(spacing: 14) {
-            Text("Review and Confirm")
-                .font(.title2)
-                .fontWeight(.bold)
+        VStack(spacing: 16) {
+            Text("Review and confirm")
+                .font(.system(size: 22, weight: .bold, design: .rounded))
+                .padding(.top, 10)
 
-            // Side-by-side summaries
-            HStack(alignment: .top, spacing: 12) {
-                // ISO summary
+            // What goes where
+            HStack(spacing: 12) {
                 if let meta = wizardState.isoMetadata {
-                    summarySection(title: "Windows ISO", icon: "opticaldisc") {
-                        infoRow("File", meta.sourceDescription)
+                    summaryCard(icon: "opticaldisc.fill", title: "Windows ISO", name: meta.sourceDescription) {
                         infoRow("Size", meta.formattedFileSize)
-                        infoRow("Image", "\(meta.installImageType) (\(meta.formattedInstallImageSize))")
-                        if meta.needsSplit {
-                            infoRow("Split", "Yes (3800 MB chunks)")
-                        }
+                        infoRow("Image", "\(meta.installImageType), \(meta.formattedInstallImageSize)")
+                        infoRow("Split", meta.needsSplit ? "\(wizardState.splitSizeMB) MB parts" : "Not needed")
                     }
                 }
 
-                // USB drive summary
+                Image(systemName: "arrow.right")
+                    .font(.system(size: 15, weight: .bold))
+                    .foregroundStyle(.white)
+                    .frame(width: 34, height: 34)
+                    .background(Theme.gradient, in: Circle())
+                    .shadow(color: Theme.blue.opacity(0.5), radius: 8, y: 2)
+
                 if let drive = wizardState.selectedDrive {
-                    summarySection(title: "Target USB", icon: "externaldrive") {
-                        infoRow("Drive", drive.displayName)
+                    summaryCard(icon: "externaldrive.fill", title: "Target USB", name: drive.name.isEmpty ? "Untitled" : drive.name) {
                         infoRow("Size", drive.formattedSize)
-                        infoRow("ID", "/dev/\(drive.id)")
+                        infoRow("Device", "/dev/\(drive.id)")
                         infoRow("Bus", drive.busProtocol.isEmpty ? "External" : drive.busProtocol)
                     }
                 }
@@ -41,85 +42,105 @@ struct ReviewView: View {
 
             // Volume name
             HStack {
-                Text("Volume Name:")
+                Text("Volume name")
                     .font(.callout)
-                    .foregroundColor(.secondary)
+                    .foregroundStyle(.secondary)
                 TextField("WINDOWSUSB", text: $wizardState.volumeName)
                     .textFieldStyle(.roundedBorder)
+                    .font(.system(.body, design: .monospaced))
                     .frame(width: 180)
             }
 
-            Divider()
-
             // Warning and confirmation
-            VStack(spacing: 10) {
-                HStack(spacing: 6) {
+            VStack(spacing: 12) {
+                HStack(spacing: 8) {
                     Image(systemName: "exclamationmark.triangle.fill")
-                        .foregroundColor(.orange)
-                    Text("All data on the selected USB drive will be permanently erased.")
+                        .foregroundStyle(Theme.danger)
+                    Text("Everything on the selected USB drive will be permanently erased.")
                         .font(.callout)
                         .fontWeight(.semibold)
-                        .foregroundColor(.orange)
                 }
 
-                HStack {
+                HStack(spacing: 10) {
                     Text("Type")
                         .font(.callout)
+                        .foregroundStyle(.secondary)
                     Text("ERASE")
-                        .font(.callout)
+                        .font(.system(.callout, design: .monospaced))
                         .fontWeight(.bold)
-                        .foregroundColor(.red)
-                    Text("to confirm:")
+                        .foregroundStyle(Theme.danger)
+                    Text("to confirm")
                         .font(.callout)
+                        .foregroundStyle(.secondary)
 
                     TextField("", text: $confirmText)
                         .textFieldStyle(.roundedBorder)
+                        .font(.system(.body, design: .monospaced))
                         .frame(width: 100)
                         .onChange(of: confirmText) { _, newValue in
                             confirmed = (newValue == "ERASE")
                         }
-                }
 
-                Button("Create Bootable USB") {
-                    wizardState.advance()
+                    Button {
+                        wizardState.advance()
+                    } label: {
+                        Label("Erase and Create", systemImage: "bolt.fill")
+                    }
+                    .buttonStyle(GlowButtonStyle(danger: true))
+                    .disabled(!confirmed)
+                    .keyboardShortcut(.defaultAction)
+                    .padding(.leading, 8)
                 }
-                .disabled(!confirmed)
-                .keyboardShortcut(.defaultAction)
-                .controlSize(.large)
             }
+            .frame(maxWidth: .infinity)
+            .padding(16)
+            .background(Color.red.opacity(0.07), in: RoundedRectangle(cornerRadius: 16, style: .continuous))
+            .overlay(RoundedRectangle(cornerRadius: 16, style: .continuous).strokeBorder(Color.red.opacity(0.3)))
+
+            Spacer(minLength: 0)
         }
-        .padding(20)
+        .padding(.horizontal, 36)
     }
 
-    // Compact summary card
-    private func summarySection<Content: View>(
-        title: String,
+    // One side of the transfer: an icon, what it is, its name and a few facts
+    private func summaryCard<Content: View>(
         icon: String,
+        title: String,
+        name: String,
         @ViewBuilder content: () -> Content
     ) -> some View {
-        VStack(alignment: .leading, spacing: 5) {
-            Label(title, systemImage: icon)
-                .font(.subheadline)
-                .fontWeight(.semibold)
+        VStack(alignment: .leading, spacing: 10) {
+            HStack(spacing: 10) {
+                IconTile(systemImage: icon, size: 38)
+                VStack(alignment: .leading, spacing: 1) {
+                    Text(title)
+                        .font(.caption)
+                        .foregroundStyle(.secondary)
+                    Text(name)
+                        .font(.system(size: 14, weight: .semibold))
+                        .lineLimit(1)
+                        .truncationMode(.middle)
+                }
+            }
 
             Divider()
 
-            content()
+            VStack(alignment: .leading, spacing: 4) {
+                content()
+            }
         }
-        .padding(10)
         .frame(maxWidth: .infinity, alignment: .leading)
-        .background(Color(nsColor: .controlBackgroundColor))
-        .cornerRadius(8)
+        .card()
     }
 
-    // Key-value row with compact sizing
+    // Key-value row
     private func infoRow(_ label: String, _ value: String) -> some View {
         HStack(alignment: .top) {
             Text(label)
-                .foregroundColor(.secondary)
-                .frame(width: 50, alignment: .leading)
+                .foregroundStyle(.secondary)
+                .frame(width: 54, alignment: .leading)
             Text(value)
-                .lineLimit(2)
+                .lineLimit(1)
                 .truncationMode(.middle)
         }
         .font(.callout)

@@ -18,13 +18,14 @@ struct WINISO2USBApp: App {
                 .environmentObject(wizardState)
                 .environmentObject(diskService)
                 .environmentObject(creationService)
-                .frame(minWidth: 750, minHeight: 550)
+                .frame(minWidth: 800, minHeight: 600)
                 .task {
                     #if DEBUG
                     await ScreenshotMode.run(wizard: wizardState, disks: diskService, creation: creationService)
                     #endif
                 }
         }
+        .windowStyle(.hiddenTitleBar)
         .windowResizability(.contentMinSize)
     }
 }
@@ -76,7 +77,7 @@ extension ScreenshotMode {
         }
         try? await Task.sleep(for: .milliseconds(600))
         guard let window = NSApp.windows.first(where: { $0.isVisible }) else { NSApp.terminate(nil); return }
-        window.setContentSize(NSSize(width: 800, height: 600))
+        window.setContentSize(NSSize(width: 860, height: 640))
         window.center()
         NSApp.activate(ignoringOtherApps: true)
         window.makeKeyAndOrderFront(nil)

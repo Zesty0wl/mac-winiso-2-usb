@@ -3,53 +3,73 @@ import SwiftUI
 // Step 5: Success screen with post-creation actions
 struct CompletionView: View {
     @EnvironmentObject var wizardState: WizardState
+    @State private var appeared = false
 
     var body: some View {
-        VStack(spacing: 24) {
+        VStack(spacing: 20) {
             Spacer()
 
-            Image(systemName: "checkmark.seal.fill")
-                .font(.system(size: 64))
-                .foregroundColor(.green)
+            // A tick in rings that spread out behind it
+            ZStack {
+                ForEach(0..<3) { i in
+                    Circle()
+                        .stroke(Theme.success, lineWidth: 1.5)
+                        .frame(width: 104 + CGFloat(i) * 44, height: 104 + CGFloat(i) * 44)
+                        .opacity(appeared ? 0.34 - Double(i) * 0.1 : 0)
+                        .scaleEffect(appeared ? 1 : 0.6)
+                        .animation(.spring(duration: 0.7).delay(0.08 * Double(i)), value: appeared)
+                }
+                Circle()
+                    .fill(Theme.success)
+                    .frame(width: 96, height: 96)
+                    .shadow(color: Color.green.opacity(0.5), radius: 22, y: 6)
+                Image(systemName: "checkmark")
+                    .font(.system(size: 42, weight: .bold))
+                    .foregroundStyle(.white)
+            }
+            .scaleEffect(appeared ? 1 : 0.7)
+            .animation(.spring(duration: 0.5, bounce: 0.4), value: appeared)
+            .frame(height: 200)
 
-            Text("Bootable USB Ready")
-                .font(.title)
-                .fontWeight(.bold)
+            VStack(spacing: 6) {
+                Text("Bootable USB ready")
+                    .font(.system(size: 24, weight: .bold, design: .rounded))
 
-            Text("Your Windows USB installation drive (\(wizardState.volumeName)) has been created successfully and is ready for UEFI boot.")
-                .foregroundColor(.secondary)
-                .multilineTextAlignment(.center)
-                .frame(maxWidth: 400)
+                Text("\(wizardState.volumeName) is ready to boot on any UEFI PC.")
+                    .foregroundStyle(.secondary)
+                    .multilineTextAlignment(.center)
+            }
 
-            VStack(spacing: 12) {
+            HStack(spacing: 10) {
                 Button {
                     ejectDrive()
                 } label: {
-                    Label("Eject Drive", systemImage: "eject")
-                        .frame(maxWidth: 200)
+                    Label("Eject Drive", systemImage: "eject.fill")
                 }
-                .controlSize(.large)
+                .buttonStyle(GlowButtonStyle())
 
                 Button {
                     openInFinder()
                 } label: {
                     Label("Open in Finder", systemImage: "folder")
-                        .frame(maxWidth: 200)
                 }
-                .controlSize(.large)
+                .buttonStyle(GhostButtonStyle())
 
                 Button {
                     wizardState.reset()
                 } label: {
                     Label("Create Another", systemImage: "arrow.counterclockwise")
-                        .frame(maxWidth: 200)
                 }
-                .controlSize(.large)
+                .buttonStyle(GhostButtonStyle())
             }
+            .padding(.top, 6)
 
             Spacer()
         }
         .padding()
+        .onAppear {
+            appeared = true
+        }
     }
 
     // Eject the USB drive

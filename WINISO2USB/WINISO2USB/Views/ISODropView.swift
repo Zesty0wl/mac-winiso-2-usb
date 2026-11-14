@@ -2,14 +2,12 @@ import SwiftUI
 import UniformTypeIdentifiers
 
 // Step 1: Drag-and-drop target for a Windows ISO file.
-// When no ISO is loaded, shows a compact drop zone. Once loaded, the zone
-// transforms into a summary card so the user can see the result and proceed.
+// With no ISO it's a drop zone around a spinning disc; once one is loaded it shows what was found in it.
 struct ISODropView: View {
     @EnvironmentObject var wizardState: WizardState
     @State private var isDragOver = false
     @State private var isValidating = false
-
-    private var hasISO: Bool { wizardState.isoMetadata != nil }
+    @State private var dash: CGFloat = 0
 
     var body: some View {
         VStack(spacing: 20) {
@@ -29,127 +27,109 @@ struct ISODropView: View {
         .onDrop(of: [.fileURL], isTargeted: $isDragOver) { providers in
             handleDrop(providers)
         }
-        .overlay(dragOverlay)
     }
 
-    // Drop zone shown when no ISO is selected
+    // Drop zone shown when no ISO is selected: its dashed edge creeps round, and lights up when a file is over it
     private var emptyDropView: some View {
-        VStack(spacing: 16) {
-            Image(systemName: "arrow.down.doc")
-                .font(.system(size: 40))
-                .foregroundColor(.secondary)
+        VStack(spacing: 14) {
+            DiscArt()
+                .padding(.bottom, 6)
 
-            Text("Drop a Windows .iso file here")
-                .font(.headline)
+            Text(isDragOver ? "Release to load the ISO" : "Drop a Windows ISO here")
+                .font(.system(size: 22, weight: .bold, design: .rounded))
 
-            Text("or")
-                .font(.caption)
-                .foregroundColor(.secondary)
+            Text("Windows 10 or 11, as an .iso file")
+                .foregroundStyle(.secondary)
 
-            Button("Browse...") {
+            Button {
                 pickLocalISO()
+            } label: {
+                Label("Browse…", systemImage: "folder")
             }
-            .controlSize(.large)
+            .buttonStyle(GlowButtonStyle())
+            .padding(.top, 6)
         }
-        .frame(maxWidth: 400)
-        .padding(32)
-        .background(
-            RoundedRectangle(cornerRadius: 12)
-                .strokeBorder(
-                    Color.secondary.opacity(0.4),
-                    style: StrokeStyle(lineWidth: 2, dash: [8])
-                )
-                .background(
-                    RoundedRectangle(cornerRadius: 12)
-                        .fill(Color(nsColor: .controlBackgroundColor))
-                )
+        .frame(maxWidth: 420)
+        .padding(.vertical, 34)
+        .padding(.horizontal, 30)
+        .background(.regularMaterial, in: RoundedRectangle(cornerRadius: 26, style: .continuous))
+        .overlay(
+            RoundedRectangle(cornerRadius: 26, style: .continuous)
+                .strokeBorder(Theme.spectrum, style: StrokeStyle(lineWidth: isDragOver ? 3 : 1.5, dash: [9, 7], dashPhase: dash))
+                .opacity(isDragOver ? 1 : 0.7)
         )
+        .shadow(color: Theme.blue.opacity(isDragOver ? 0.45 : 0.12), radius: isDragOver ? 30 : 16, y: 8)
+        .scaleEffect(isDragOver ? 1.02 : 1)
+        .animation(.spring(duration: 0.3), value: isDragOver)
+        .onAppear {
+            guard !ScreenshotMode.isActive else { return }
+            withAnimation(.linear(duration: 1.2).repeatForever(autoreverses: false)) { dash = -16 }
+        }
     }
 
     // Shown while the ISO is being validated and mounted
     private var validatingView: some View {
-        VStack(spacing: 12) {
+        VStack(spacing: 16) {
+            DiscArt(size: 96)
             ProgressView()
-                .controlSize(.large)
-            Text("Validating ISO...")
-                .foregroundColor(.secondary)
+                .controlSize(.small)
+            Text("Checking the ISO…")
+                .foregroundStyle(.secondary)
         }
     }
 
-    // Summary card after ISO is successfully loaded
+    // What was found, once the ISO is loaded
     private func loadedView(_ meta: ISOMetadata) -> some View {
-        VStack(spacing: 20) {
-            // Success header
-            VStack(spacing: 8) {
-                Image(systemName: "checkmark.circle.fill")
-                    .font(.system(size: 36))
-                    .foregroundColor(.green)
+        VStack(spacing: 16) {
+            DiscArt(size: 104, ready: true)
 
-                Text("ISO Ready")
-                    .font(.title2)
-                    .fontWeight(.semibold)
+            VStack(spacing: 4) {
+                Text("ISO ready")
+                    .font(.system(size: 22, weight: .bold, design: .rounded))
+                Text(meta.sourceDescription)
+                    .font(.system(.callout, design: .monospaced))
+                    .foregroundStyle(.secondary)
+                    .lineLimit(1)
+                    .truncationMode(.middle)
             }
 
-            // Details card
-            VStack(alignment: .leading, spacing: 6) {
-                infoRow("File", meta.sourceDescription)
-                infoRow("Size", meta.formattedFileSize)
-                infoRow("Install Image", "\(meta.installImageType) (\(meta.formattedInstallImageSize))")
-                infoRow("Splitting Required", meta.needsSplit ? "Yes (install.wim > 4 GB)" : "No")
+            HStack(spacing: 10) {
+                statTile("ISO size", meta.formattedFileSize, "internaldrive")
+                statTile(meta.installImageType, meta.formattedInstallImageSize, "shippingbox")
+                statTile("Splitting", meta.needsSplit ? "Required" : "Not needed", "square.split.2x1")
             }
-            .padding(16)
-            .frame(maxWidth: 420, alignment: .leading)
-            .background(Color(nsColor: .controlBackgroundColor))
-            .cornerRadius(10)
+            .frame(maxWidth: 520)
+
+            if meta.needsSplit {
+                Text("install.wim is over FAT32's 4 GB limit, so it will be split into parts on the drive.")
+                    .font(.caption)
+                    .foregroundStyle(.secondary)
+            }
 
             Button("Choose a different ISO") {
                 wizardState.isoFilePath = nil
                 wizardState.isoMetadata = nil
             }
-            .font(.caption)
-            .foregroundColor(.secondary)
-
-            Text("Click Next to continue.")
-                .font(.subheadline)
-                .foregroundColor(.secondary)
+            .buttonStyle(.link)
+            .font(.callout)
         }
+        .padding(.horizontal, 24)
     }
 
-    // Full-window overlay shown when dragging a file over the view
-    private var dragOverlay: some View {
-        Group {
-            if isDragOver {
-                ZStack {
-                    RoundedRectangle(cornerRadius: 12)
-                        .fill(Color.accentColor.opacity(0.08))
-                        .overlay(
-                            RoundedRectangle(cornerRadius: 12)
-                                .strokeBorder(Color.accentColor, style: StrokeStyle(lineWidth: 2, dash: [8]))
-                        )
-
-                    VStack(spacing: 8) {
-                        Image(systemName: "arrow.down.doc.fill")
-                            .font(.system(size: 36))
-                            .foregroundColor(.accentColor)
-                        Text("Release to load ISO")
-                            .font(.headline)
-                            .foregroundColor(.accentColor)
-                    }
-                }
-                .padding(16)
-            }
-        }
-    }
-
-    // Key-value row for the ISO info card
-    private func infoRow(_ label: String, _ value: String) -> some View {
-        HStack {
-            Text(label)
-                .foregroundColor(.secondary)
-                .frame(width: 130, alignment: .leading)
+    // One fact about the ISO: a label, its value and an icon
+    private func statTile(_ label: String, _ value: String, _ icon: String) -> some View {
+        VStack(alignment: .leading, spacing: 6) {
+            Image(systemName: icon)
+                .font(.system(size: 15, weight: .semibold))
+                .foregroundStyle(Theme.gradient)
             Text(value)
+                .font(.system(size: 18, weight: .semibold, design: .rounded))
+            Text(label)
+                .font(.caption)
+                .foregroundStyle(.secondary)
         }
-        .font(.callout)
+        .frame(maxWidth: .infinity, alignment: .leading)
+        .card(radius: 14, padding: 14)
     }
 
     // MARK: - Actions

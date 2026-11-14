@@ -1,135 +1,221 @@
 import SwiftUI
 
-// Step 4: Show real-time progress during USB creation.
-// Kept compact so the stage bar and nav buttons remain visible.
+// Step 4: Show real-time progress during USB creation: a ring for the whole job, the stages ticking off beside it,
+// and the running log beneath in a terminal-style panel.
 struct CreationProgressView: View {
     @EnvironmentObject var wizardState: WizardState
     @EnvironmentObject var creationService: USBCreationService
 
     @State private var hasStarted = false
 
+    private var progress: CreationProgress { creationService.progress }
+
     var body: some View {
         VStack(spacing: 14) {
-            Text("Creating Bootable USB")
-                .font(.title2)
-                .fontWeight(.bold)
-
-            // Current stage indicator
-            HStack(spacing: 8) {
-                stageIcon
-                Text(creationService.progress.stage.rawValue)
-                    .font(.subheadline)
-                    .fontWeight(.medium)
+            HStack(alignment: .center, spacing: 28) {
+                ring
+                stageList
             }
+            .padding(.top, 6)
 
-            // Progress bar
-            VStack(spacing: 4) {
-                ProgressView(value: creationService.progress.overallProgress)
-                    .progressViewStyle(.linear)
-
-                HStack {
-                    Text(String(format: "%.1f%%", creationService.progress.overallProgress * 100))
-                        .font(.caption)
-                        .monospacedDigit()
-                        .foregroundColor(.secondary)
-                    Spacer()
-                    if !creationService.progress.currentFile.isEmpty {
-                        Text(creationService.progress.currentFile)
-                            .font(.caption)
-                            .foregroundColor(.secondary)
-                            .lineLimit(1)
-                            .truncationMode(.middle)
-                    }
-                }
-            }
+            // What's being worked on right now
+            Text(progress.currentFile.isEmpty ? " " : progress.currentFile)
+                .font(.system(.caption, design: .monospaced))
+                .foregroundStyle(.secondary)
+                .lineLimit(1)
+                .truncationMode(.middle)
 
             // Error message if failed
-            if let error = creationService.progress.error {
+            if let error = progress.error {
                 Text(error.localizedDescription)
                     .font(.callout)
-                    .foregroundColor(.red)
-                    .padding(8)
+                    .foregroundStyle(.red)
+                    .padding(10)
                     .frame(maxWidth: .infinity, alignment: .leading)
-                    .background(Color.red.opacity(0.1))
-                    .cornerRadius(6)
+                    .background(Color.red.opacity(0.1), in: RoundedRectangle(cornerRadius: 10, style: .continuous))
             }
 
-            // Operation log fills remaining space
-            VStack(alignment: .leading, spacing: 4) {
-                Text("Operation Log")
-                    .font(.caption)
-                    .foregroundColor(.secondary)
-
-                ScrollViewReader { proxy in
-                    ScrollView {
-                        LazyVStack(alignment: .leading, spacing: 1) {
-                            ForEach(
-                                Array(creationService.progress.logLines.enumerated()),
-                                id: \.offset
-                            ) { idx, line in
-                                Text(line)
-                                    .font(.system(.caption2, design: .monospaced))
-                                    .foregroundColor(.secondary)
-                                    .id(idx)
-                            }
-                        }
-                        .padding(6)
-                    }
-                    .background(Color(nsColor: .textBackgroundColor))
-                    .cornerRadius(6)
-                    .onChange(of: creationService.progress.logLines.count) { _, _ in
-                        if let last = creationService.progress.logLines.indices.last {
-                            proxy.scrollTo(last, anchor: .bottom)
-                        }
-                    }
-                }
-            }
-            .frame(maxHeight: .infinity)
+            log
+                .frame(maxHeight: .infinity)
 
             // Action buttons
             HStack {
-                if creationService.progress.stage != .complete
-                    && creationService.progress.stage != .failed {
+                if progress.stage != .complete && progress.stage != .failed {
                     Button("Cancel") {
                         creationService.cancel()
                     }
+                    .buttonStyle(GhostButtonStyle())
                 }
 
                 Spacer()
 
-                if creationService.progress.stage == .complete {
-                    Button("Done") {
+                if progress.stage == .complete {
+                    Button {
                         wizardState.advance()
+                    } label: {
+                        Label("Done", systemImage: "checkmark")
                     }
+                    .buttonStyle(GlowButtonStyle())
                     .keyboardShortcut(.defaultAction)
                 }
 
-                if creationService.progress.stage == .failed {
+                if progress.stage == .failed {
                     Button("Start Over") {
                         wizardState.reset()
                     }
+                    .buttonStyle(GlowButtonStyle())
                 }
             }
+            .frame(height: 36)
         }
-        .padding(16)
+        .padding(.horizontal, 32)
+        .padding(.bottom, 14)
         .onAppear {
             startCreation()
         }
     }
 
-    // Icon for the current stage
-    @ViewBuilder
-    private var stageIcon: some View {
-        if creationService.progress.stage == .failed {
-            Image(systemName: "xmark.circle.fill")
-                .foregroundColor(.red)
-        } else if creationService.progress.stage == .complete {
-            Image(systemName: "checkmark.circle.fill")
-                .foregroundColor(.green)
-        } else {
-            ProgressView()
-                .controlSize(.small)
+    // The whole job as a ring, with the percentage in the middle
+    private var ring: some View {
+        let failed = progress.stage == .failed
+        return ZStack {
+            Circle()
+                .stroke(Color.primary.opacity(0.08), lineWidth: 14)
+            Circle()
+                .trim(from: 0, to: max(0.005, progress.overallProgress))
+                .stroke(
+                    failed ? AnyShapeStyle(Theme.danger) : AnyShapeStyle(AngularGradient(colors: [Theme.blue, Theme.cyan, Theme.violet, Theme.blue], center: .center)),
+                    style: StrokeStyle(lineWidth: 14, lineCap: .round)
+                )
+                .rotationEffect(.degrees(-90))
+                .shadow(color: (failed ? Color.red : Theme.cyan).opacity(0.55), radius: 9)
+                .animation(.easeInOut(duration: 0.5), value: progress.overallProgress)
+
+            VStack(spacing: 2) {
+                HStack(alignment: .firstTextBaseline, spacing: 1) {
+                    Text("\(Int((progress.overallProgress * 100).rounded()))")
+                        .font(.system(size: 46, weight: .bold, design: .rounded))
+                        .monospacedDigit()
+                        .contentTransition(.numericText())
+                    Text("%")
+                        .font(.system(size: 18, weight: .semibold, design: .rounded))
+                        .foregroundStyle(.secondary)
+                }
+                Text(failed ? "Failed" : progress.stage == .complete ? "Complete" : "Creating")
+                    .font(.caption)
+                    .foregroundStyle(.secondary)
+            }
         }
+        .frame(width: 168, height: 168)
+        .padding(8)
+    }
+
+    // The pipeline's stages, in order. Splitting only happens (and is only listed) when install.wim is too big.
+    private var stages: [(CreationProgress.Stage, String)] {
+        var all: [(CreationProgress.Stage, String)] = [
+            (.unmounting, "Unmount the drive"),
+            (.erasing, "Erase and format (GPT, FAT32)"),
+            (.mountingISO, "Mount the ISO"),
+            (.copying, "Copy files"),
+        ]
+        if wizardState.isoMetadata?.needsSplit ?? false { all.append((.splitting, "Split install.wim")) }
+        all += [(.syncing, "Flush writes"), (.ejecting, "Eject")]
+        return all
+    }
+
+    private var stageList: some View {
+        let all = stages
+        let current = all.firstIndex { $0.0 == progress.stage }
+        let allDone = progress.stage == .complete
+        return VStack(alignment: .leading, spacing: 7) {
+            ForEach(Array(all.enumerated()), id: \.offset) { index, stage in
+                let done = allDone || (current.map { index < $0 } ?? false)
+                let active = current == index
+                HStack(spacing: 9) {
+                    ZStack {
+                        if done {
+                            Image(systemName: "checkmark.circle.fill")
+                                .foregroundStyle(Theme.gradient)
+                        } else if active {
+                            ProgressView()
+                                .controlSize(.small)
+                                .scaleEffect(0.8)
+                        } else {
+                            Image(systemName: "circle")
+                                .foregroundStyle(.tertiary)
+                        }
+                    }
+                    .font(.system(size: 15))
+                    .frame(width: 18, height: 18)
+
+                    Text(stage.1)
+                        .font(.system(size: 13, weight: active ? .semibold : .regular))
+                        .foregroundStyle(active ? .primary : done ? .secondary : .tertiary)
+                }
+            }
+        }
+        .frame(width: 250, alignment: .leading)
+        .card(radius: 16, padding: 16)
+    }
+
+    // The running log, as a terminal
+    private var log: some View {
+        VStack(spacing: 0) {
+            HStack(spacing: 6) {
+                ForEach([Color.red, .yellow, .green], id: \.self) { c in
+                    Circle().fill(c.opacity(0.75)).frame(width: 8, height: 8)
+                }
+                Text("operation log")
+                    .font(.system(.caption2, design: .monospaced))
+                    .foregroundStyle(.white.opacity(0.45))
+                    .padding(.leading, 6)
+                Spacer()
+            }
+            .padding(.horizontal, 10)
+            .padding(.vertical, 7)
+            .background(Color.white.opacity(0.06))
+
+            ScrollViewReader { proxy in
+                ScrollView {
+                    LazyVStack(alignment: .leading, spacing: 2) {
+                        ForEach(Array(progress.logLines.enumerated()), id: \.offset) { idx, line in
+                            logLine(line)
+                                .id(idx)
+                        }
+                    }
+                    .frame(maxWidth: .infinity, alignment: .leading)
+                    .padding(10)
+                }
+                .onChange(of: progress.logLines.count) { _, _ in
+                    if let last = progress.logLines.indices.last {
+                        proxy.scrollTo(last, anchor: .bottom)
+                    }
+                }
+                .onAppear {
+                    if let last = progress.logLines.indices.last {
+                        proxy.scrollTo(last, anchor: .bottom)
+                    }
+                }
+            }
+        }
+        .background(Color(red: 0.05, green: 0.07, blue: 0.11))
+        .clipShape(RoundedRectangle(cornerRadius: 12, style: .continuous))
+        .overlay(RoundedRectangle(cornerRadius: 12, style: .continuous).strokeBorder(Color.white.opacity(0.12)))
+        .shadow(color: .black.opacity(0.25), radius: 14, y: 6)
+    }
+
+    // One log line: steps in green behind a prompt, their detail (indented) dimmer, failures in red
+    private func logLine(_ line: String) -> some View {
+        let detail = line.hasPrefix("  ")
+        let failed = line.hasPrefix("FAILED")
+        return HStack(alignment: .firstTextBaseline, spacing: 6) {
+            Text(detail ? " " : "›")
+                .foregroundStyle(Theme.cyan)
+            Text(detail ? String(line.dropFirst(2)) : line)
+                .foregroundStyle(failed ? Color(red: 1, green: 0.45, blue: 0.42) : detail ? Color.white.opacity(0.5) : Color(red: 0.62, green: 0.93, blue: 0.75))
+                .textSelection(.enabled)
+        }
+        .font(.system(size: 11, design: .monospaced))
     }
 
     // Kick off the USB creation pipeline once
