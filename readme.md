@@ -136,3 +136,7 @@ Feel free to submit issues or pull requests for improvements!
 ---
 
 **Note**: This script is for creating Windows installation media only. You still need a valid Windows license to install and activate Windows.
+
+## Packaging
+
+Releases are a signed, notarised `.pkg`. `packaging/scripts/preinstall` goes in the package (`pkgbuild --scripts packaging/scripts`): it removes `ISO2USB.app`, the name the app was installed under up to version 1.1, so an upgrade doesn't leave both.

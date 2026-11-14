@@ -1,0 +1,14 @@
+#!/bin/sh
+# Up to version 1.1 the app was installed as ISO2USB.app, under another bundle ID. The installer doesn't know that is
+# the same app, so remove it here, or people who upgrade would be left with both. Only that app is touched: the path
+# and its bundle ID must both match. $3 is the volume being installed to.
+old="${3%/}/Applications/ISO2USB.app"
+if [ -d "$old" ]; then
+  id=$(/usr/libexec/PlistBuddy -c "Print :CFBundleIdentifier" "$old/Contents/Info.plist" 2>/dev/null)
+  if [ "$id" = "com.neiljohn.iso2usb" ]; then
+    /usr/bin/pkill -x ISO2USB 2>/dev/null
+    /bin/rm -rf "$old"
+    echo "Removed the previous version at $old"
+  fi
+fi
+exit 0
