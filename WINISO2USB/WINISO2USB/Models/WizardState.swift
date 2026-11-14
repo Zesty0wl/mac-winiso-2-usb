@@ -122,9 +122,8 @@ final class WizardState: ObservableObject {
             return isoFilePath != nil && isoMetadata != nil
         case .selectUSB:
             return selectedDrive != nil
-        case .review:
-            return true
-        case .progress, .completion:
+        case .review, .progress, .completion:
+            // Review is left by its own confirmed "Create Bootable USB" button, never by Next.
             return false
         }
     }

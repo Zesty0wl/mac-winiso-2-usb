@@ -99,8 +99,10 @@ struct WizardContainerView: View {
 
             Spacer()
 
-            // Next button -- visible on steps 1-3
-            if wizardState.currentStep != .progress
+            // Next button -- visible on steps 1-2. The Review step has no Next: the only way on from there is its own
+            // "Create Bootable USB" button, which stays disabled until ERASE has been typed.
+            if wizardState.currentStep != .review
+                && wizardState.currentStep != .progress
                 && wizardState.currentStep != .completion {
                 Button("Next") {
                     wizardState.advance()

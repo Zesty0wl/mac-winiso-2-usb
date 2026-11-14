@@ -134,7 +134,8 @@ struct CreationProgressView: View {
 
     // Kick off the USB creation pipeline once
     private func startCreation() {
-        guard !hasStarted else { return }
+        // Screenshot mode only shows this screen: it must never erase or write anything.
+        guard !hasStarted, !ScreenshotMode.isActive else { return }
         hasStarted = true
 
         guard let isoPath = wizardState.isoFilePath,

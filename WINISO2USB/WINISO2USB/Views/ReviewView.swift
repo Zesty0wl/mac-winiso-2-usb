@@ -4,8 +4,9 @@ import SwiftUI
 // ISO and USB summaries are placed side by side to keep everything visible.
 struct ReviewView: View {
     @EnvironmentObject var wizardState: WizardState
-    @State private var confirmText: String = ""
-    @State private var confirmed: Bool = false
+    // Screenshot mode shows the screen as it is once the confirmation has been typed.
+    @State private var confirmText: String = ScreenshotMode.isActive ? "ERASE" : ""
+    @State private var confirmed: Bool = ScreenshotMode.isActive
 
     var body: some View {
         VStack(spacing: 14) {

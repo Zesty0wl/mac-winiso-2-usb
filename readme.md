@@ -6,6 +6,8 @@ Create bootable Windows USB drives on macOS -- no Terminal, no Homebrew, no fuss
 
 A native macOS app that wraps the entire process in a guided wizard. All dependencies (including wimlib for splitting oversized install.wim files) are bundled inside the app -- nothing to install.
 
+![The WINISO2USB wizard, from choosing an ISO to a finished USB drive](docs/walkthrough.gif)
+
 ### Requirements
 
 - macOS 14.0 (Sonoma) or later
@@ -17,12 +19,21 @@ A native macOS app that wraps the entire process in a guided wizard. All depende
 1. **Select ISO** -- Drag and drop a Windows ISO file (or use the file picker). The app validates the ISO and extracts edition/version metadata.
 2. **Select USB** -- Pick a connected removable USB drive. Internal and boot disks are filtered out for safety.
 3. **Review** -- Confirm your selections before the destructive operation begins.
-4. **Creating** -- The app erases the drive (GPT + FAT32), copies files, and splits install.wim if needed. Real-time progress, speed, and ETA are shown.
+4. **Creating** -- The app erases the drive (GPT + FAT32), copies files, and splits install.wim if needed. Progress, the current file and a running log are shown.
 5. **Complete** -- Eject and go. The USB is ready to boot on any UEFI system.
+
+| | |
+|---|---|
+| ![Step 1: an ISO has been chosen and checked](docs/screenshots/light/2-iso-ready.png) | ![Step 2: choosing the USB drive](docs/screenshots/light/3-select-usb.png) |
+| ![Step 3: reviewing and confirming the erase](docs/screenshots/light/4-review.png) | ![Step 4: splitting install.wim, with the operation log](docs/screenshots/dark/6-splitting.png) |
 
 ### Building from Source
 
 Open `WINISO2USB/WINISO2USB.xcodeproj` in Xcode 16+ and build. The project uses Swift 6 with strict concurrency. The bundled `wimlib-imagex` binary and `libwim.15.dylib` are copied into the app bundle by a build phase script that also fixes dylib load paths and re-signs both with hardened runtime.
+
+### Screenshots
+
+`docs/screenshots.sh` rebuilds the screenshots and the walkthrough video. It runs a Debug build in a screenshot mode that fills the wizard with sample data, so no ISO or USB drive is needed and nothing is erased. The video needs `ffmpeg`.
 
 ### Project Structure
 

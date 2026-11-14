@@ -33,6 +33,8 @@ final class DiskService: ObservableObject {
 
     // Trigger a fresh scan for USB drives
     func refreshDrives() {
+        // Screenshot mode shows sample drives: don't replace them with the real ones.
+        guard !ScreenshotMode.isActive else { return }
         Task {
             do {
                 let drives = try await scanForUSBDrives()
