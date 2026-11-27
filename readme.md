@@ -1,16 +1,20 @@
-# Windows Bootable USB Creator for macOS
+# WINISO2USB: Windows Bootable USB Creator for macOS
 
-Create bootable Windows USB drives on macOS -- no Terminal, no Homebrew, no fuss.
+Create a bootable Windows 10 or 11 USB drive on your Mac -- no Terminal, no Homebrew, no fuss.
 
-## WINISO2USB (GUI App)
+## Download
 
-A native macOS app that wraps the entire process in a guided wizard. All dependencies (including wimlib for splitting oversized install.wim files) are bundled inside the app -- nothing to install.
+**[Download the latest version](https://github.com/Zesty0wl/mac-winiso-2-usb/releases/latest)** -- open the `.pkg` and WINISO2USB is installed in Applications. The installer is signed and notarised by Apple, so it opens without a Gatekeeper warning.
+
+If it saves you some hassle, please give the repo a star -- it helps other Mac users find it.
 
 ![The WINISO2USB wizard, from choosing an ISO to a finished USB drive](docs/walkthrough.gif)
 
+A native macOS app that wraps the entire process in a guided wizard. All dependencies (including wimlib for splitting oversized install.wim files) are bundled inside the app -- nothing else to install.
+
 ### Requirements
 
-- macOS 14.0 (Sonoma) or later
+- A Mac with Apple silicon (M1 or later), running macOS 14.0 (Sonoma) or later. On an Intel Mac, use the [command-line script](#command-line-script) instead.
 - 8 GB+ USB drive (16 GB recommended)
 - A Windows ISO file (Windows 10 or 11)
 
@@ -26,28 +30,6 @@ A native macOS app that wraps the entire process in a guided wizard. All depende
 |---|---|
 | ![Step 1: an ISO has been chosen and checked](docs/screenshots/light/2-iso-ready.png) | ![Step 2: choosing the USB drive](docs/screenshots/light/3-select-usb.png) |
 | ![Step 3: reviewing and confirming the erase](docs/screenshots/light/4-review.png) | ![Step 4: splitting install.wim, with the operation log](docs/screenshots/dark/6-splitting.png) |
-
-### Building from Source
-
-Open `WINISO2USB/WINISO2USB.xcodeproj` in Xcode 16+ and build. The project uses Swift 6 with strict concurrency. The bundled `wimlib-imagex` binary and `libwim.15.dylib` are copied into the app bundle by a build phase script that also fixes dylib load paths and re-signs both with hardened runtime.
-
-### Screenshots
-
-`docs/screenshots.sh` rebuilds the screenshots and the walkthrough video. It runs a Debug build in a screenshot mode that fills the wizard with sample data, so no ISO or USB drive is needed and nothing is erased. The video needs `ffmpeg`.
-
-### Project Structure
-
-```
-WINISO2USB/
-  WINISO2USB.xcodeproj/     Xcode project
-  WINISO2USB/
-    WINISO2USBApp.swift      App entry point
-    Models/               WizardState, USBDrive, ISOMetadata
-    Views/                SwiftUI wizard steps
-    Services/             DiskService, ISOService, USBCreationService, ProcessRunner
-    Resources/bin/        Bundled wimlib-imagex + libwim.15.dylib
-    Assets.xcassets/      App icon
-```
 
 ---
 
@@ -100,14 +82,14 @@ Both the GUI app and the script follow the same pipeline:
 ## Safety
 
 - Internal and boot disks are rejected.
-- The script requires typing "ERASE" to confirm; the app shows a review step.
+- Both the app and the script require typing "ERASE" before anything is erased.
 - Hardened runtime is enabled on the app and all bundled binaries.
 
 ## Compatibility
 
 - **Windows versions:** 10, 11, Server 2016/2019/2022
 - **macOS:** 14.0+ for the app; 10.13+ for the script
-- **Architecture:** Intel and Apple Silicon
+- **Architecture:** the app needs Apple silicon; the script runs on Intel and Apple silicon
 
 ### Target PC Requirements
 - UEFI firmware (most PCs from 2012+)
@@ -137,6 +119,30 @@ Feel free to submit issues or pull requests for improvements!
 
 **Note**: This script is for creating Windows installation media only. You still need a valid Windows license to install and activate Windows.
 
-## Packaging
+## For Developers
+
+### Building from Source
+
+Open `WINISO2USB/WINISO2USB.xcodeproj` in Xcode 16+ and build. The project uses Swift 6 with strict concurrency. The bundled `wimlib-imagex` binary and `libwim.15.dylib` are copied into the app bundle by a build phase script that also fixes dylib load paths and re-signs both with hardened runtime.
+
+### Screenshots
+
+`docs/screenshots.sh` rebuilds the screenshots and the walkthrough video. It runs a Debug build in a screenshot mode that fills the wizard with sample data, so no ISO or USB drive is needed and nothing is erased. The video needs `ffmpeg`.
+
+### Project Structure
+
+```
+WINISO2USB/
+  WINISO2USB.xcodeproj/     Xcode project
+  WINISO2USB/
+    WINISO2USBApp.swift      App entry point
+    Models/               WizardState, USBDrive, ISOMetadata
+    Views/                SwiftUI wizard steps
+    Services/             DiskService, ISOService, USBCreationService, ProcessRunner
+    Resources/bin/        Bundled wimlib-imagex + libwim.15.dylib
+    Assets.xcassets/      App icon
+```
+
+### Packaging
 
 Releases are a signed, notarised `.pkg`. `packaging/scripts/preinstall` goes in the package (`pkgbuild --scripts packaging/scripts`): it removes `ISO2USB.app`, the name the app was installed under up to version 1.1, so an upgrade doesn't leave both.
