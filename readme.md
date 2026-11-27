@@ -39,7 +39,7 @@ For those who prefer the terminal, the original shell script is still available.
 
 ### Prerequisites
 
-Built-in macOS tools (`diskutil`, `hdiutil`, `rsync`) cover most cases. **wimlib** is only needed if your ISO contains an `install.wim` larger than 4 GB:
+The script uses built-in macOS tools (`diskutil`, `hdiutil`, `rsync`) plus **wimlib**, which splits an `install.wim` larger than 4 GB (most current Windows 11 ISOs have one). The script checks for wimlib before it starts and stops if it is missing, so install it first. [Homebrew](https://brew.sh) works on both Intel and Apple silicon:
 
 ```bash
 brew install wimlib
